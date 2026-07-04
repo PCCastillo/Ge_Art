@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private var currentUserData: User? = null
     private val dbRef = FirebaseDatabase.getInstance().getReference("commissions")
+    private var commissionsListener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     // --- LÓGICA DEL ARTISTA ---
-    // Variable global para recordar qué filtro está activo (Ponla fuera de la función, al nivel de la clase si lo deseas, o dentro funciona igual)
     private var currentArtistFilter = "MARKET"
 
     private fun setupArtistPanel() {
@@ -91,11 +91,14 @@ class MainActivity : AppCompatActivity() {
                 when (currentArtistFilter) {
                     "MARKET" -> if (comm.status == "PENDING" && comm.artistId.isEmpty()) displayedCommissions.add(comm)
                     "DIRECT" -> if (comm.status == "DIRECT_REQUEST" && comm.artistId == artistId) displayedCommissions.add(comm)
-                    "MINE" -> if ((comm.status == "ACCEPTED" || comm.status == "COMPLETED") && comm.artistId == artistId) displayedCommissions.add(comm)
+                    "IN_PROGRESS" -> if (comm.status == "ACCEPTED" && comm.artistId == artistId) displayedCommissions.add(comm)
+                    "COMPLETED" -> if ((comm.status == "COMPLETED" || comm.status == "CANCELED") && comm.artistId == artistId) displayedCommissions.add(comm)
                 }
             }
             adapter.notifyDataSetChanged()
         }
+
+        val btnFilterCompleted = findViewById<Button>(R.id.btnFilterCompleted)
 
         fun updateChips(selected: Button) {
             val selectedBg = R.drawable.bg_chip_selected
@@ -104,19 +107,22 @@ class MainActivity : AppCompatActivity() {
             btnFilterMarket?.setBackgroundResource(if (selected == btnFilterMarket) selectedBg else unselectedBg)
             btnFilterDirect?.setBackgroundResource(if (selected == btnFilterDirect) selectedBg else unselectedBg)
             btnFilterMine?.setBackgroundResource(if (selected == btnFilterMine) selectedBg else unselectedBg)
+            btnFilterCompleted?.setBackgroundResource(if (selected == btnFilterCompleted) selectedBg else unselectedBg)
             btnFilterMarket?.setTextColor(if (selected == btnFilterMarket) android.graphics.Color.WHITE else secondaryColor)
             btnFilterDirect?.setTextColor(if (selected == btnFilterDirect) android.graphics.Color.WHITE else secondaryColor)
             btnFilterMine?.setTextColor(if (selected == btnFilterMine) android.graphics.Color.WHITE else secondaryColor)
+            btnFilterCompleted?.setTextColor(if (selected == btnFilterCompleted) android.graphics.Color.WHITE else secondaryColor)
         }
 
         // Listeners de los botones
         btnFilterMarket?.setOnClickListener { currentArtistFilter = "MARKET"; updateDisplayedList(); updateChips(btnFilterMarket) }
         btnFilterDirect?.setOnClickListener { currentArtistFilter = "DIRECT"; updateDisplayedList(); updateChips(btnFilterDirect) }
-        btnFilterMine?.setOnClickListener { currentArtistFilter = "MINE"; updateDisplayedList(); updateChips(btnFilterMine) }
+        btnFilterMine?.setOnClickListener { currentArtistFilter = "IN_PROGRESS"; updateDisplayedList(); updateChips(btnFilterMine) }
+        btnFilterCompleted?.setOnClickListener { currentArtistFilter = "COMPLETED"; updateDisplayedList(); updateChips(btnFilterCompleted) }
         updateChips(btnFilterMarket)
 
         // Descargar TODAS las comisiones y dejar que la función de arriba las filtre
-        dbRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
+        commissionsListener = object : com.google.firebase.database.ValueEventListener {
             override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
                 allCommissions.clear()
                 for (data in snapshot.children) {
@@ -128,7 +134,8 @@ class MainActivity : AppCompatActivity() {
                 updateDisplayedList() // Actualizar la vista automáticamente al recibir datos
             }
             override fun onCancelled(error: com.google.firebase.database.DatabaseError) {}
-        })
+        }
+        dbRef.addValueEventListener(commissionsListener as ValueEventListener)
 
         findViewById<TextView>(R.id.btnViewProfile)?.setOnClickListener {
             startActivity(android.content.Intent(this, ProfileActivity::class.java))
@@ -219,6 +226,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        commissionsListener?.let { dbRef.removeEventListener(it) }
+    }
+
     private fun irAlLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -269,12 +281,12 @@ class MainActivity : AppCompatActivity() {
             setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0, 0, 0, 16)
         })
 
-        // 4. Estado (ACTUALIZADO CON DIRECT_REQUEST)
         val estadoTraducido = when(commission.status) {
             "PENDING" -> "Pendiente de un artista"
             "DIRECT_REQUEST" -> "Solicitud Directa (Privada)"
             "ACCEPTED" -> "En progreso"
             "COMPLETED" -> "Obra finalizada"
+            "CANCELED" -> "Cancelada"
             else -> commission.status
         }
         layout.addView(TextView(this).apply {
@@ -338,13 +350,13 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Solicitud rechazada", Toast.LENGTH_SHORT).show()
                 }
             }
-            else if (commission.status == "ACCEPTED" && commission.artistId == FirebaseAuth.getInstance().currentUser?.uid) {
-                // EL ARTISTA ENTRA AL CHAT
+            else if ((commission.status == "ACCEPTED" || commission.status == "CANCELED") && commission.artistId == FirebaseAuth.getInstance().currentUser?.uid) {
                 builder.setPositiveButton("Abrir Chat") { _, _ ->
                     val intent = android.content.Intent(this, ChatActivity::class.java)
                     intent.putExtra("COMMISSION_ID", commission.id)
                     intent.putExtra("COMMISSION_TITLE", commission.title)
-                    intent.putExtra("IS_CLIENT", false) // Es artista
+                    intent.putExtra("IS_CLIENT", false)
+                    intent.putExtra("COMMISSION_STATUS", commission.status)
                     startActivity(intent)
                 }
             }
@@ -353,12 +365,21 @@ class MainActivity : AppCompatActivity() {
         // Cliente
         else if (currentUserData?.role == "CLIENT" && commission.clientId == currentUserData?.id) {
             if (commission.status == "ACCEPTED") {
-                // EL CLIENTE ENTRA AL CHAT
                 builder.setPositiveButton("Abrir Chat") { _, _ ->
                     val intent = android.content.Intent(this, ChatActivity::class.java)
                     intent.putExtra("COMMISSION_ID", commission.id)
                     intent.putExtra("COMMISSION_TITLE", commission.title)
-                    intent.putExtra("IS_CLIENT", true) // Es cliente
+                    intent.putExtra("IS_CLIENT", true)
+                    intent.putExtra("COMMISSION_STATUS", commission.status)
+                    startActivity(intent)
+                }
+            } else if (commission.status == "CANCELED") {
+                builder.setPositiveButton("Ver Chat") { _, _ ->
+                    val intent = android.content.Intent(this, ChatActivity::class.java)
+                    intent.putExtra("COMMISSION_ID", commission.id)
+                    intent.putExtra("COMMISSION_TITLE", commission.title)
+                    intent.putExtra("IS_CLIENT", true)
+                    intent.putExtra("COMMISSION_STATUS", commission.status)
                     startActivity(intent)
                 }
             } else if (commission.status == "COMPLETED" && !commission.isRated) {
@@ -388,17 +409,10 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Calificar al Artista")
             .setView(container)
-            // Dentro de showRatingDialog...
-            // Dentro de showRatingDialog...
             .setPositiveButton("Enviar") { _, _ ->
                 val rating = ratingBar.rating.toDouble()
-                // PASAMOS EL OBJETO COMMISSION COMPLETO
                 updateArtistRating(commission, rating)
-
-                // Ya no es necesario el updateChildren aquí,
-                // la transacción de arriba se encarga de todo.
             }.show()
-            .show()
     }
 
     private fun updateArtistRating(commission: Commission, newRating: Double) {

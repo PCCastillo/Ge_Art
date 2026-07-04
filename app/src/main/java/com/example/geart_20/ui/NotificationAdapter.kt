@@ -53,6 +53,7 @@ class NotificationAdapter(
         "new_direct_commission" -> "Nueva solicitud directa"
         "commission_accepted" -> "Comisión aceptada"
         "commission_completed" -> "Comisión finalizada"
+        "commission_canceled" -> "Comisión cancelada"
         else -> type
     }
 }

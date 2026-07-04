@@ -27,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
 
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPass = findViewById<EditText>(R.id.etPass)
+        val etName = findViewById<EditText>(R.id.etName)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val rgRole = findViewById<RadioGroup>(R.id.rgRole)
@@ -42,15 +43,16 @@ class LoginActivity : AppCompatActivity() {
         btnRegister.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val pass = etPass.text.toString().trim()
+            val name = etName.text.toString().trim()
             val role = if (rbArtist.isChecked) "ARTIST" else "CLIENT"
 
-            if (email.isEmpty() || pass.isEmpty()) {
+            if (email.isEmpty() || pass.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
-                val success = viewModel.handleLogin(email, pass, "Usuario Nuevo", role)
+                val success = viewModel.handleLogin(email, pass, name, role)
                 if (success) {
                     irAMain()
                 } else {

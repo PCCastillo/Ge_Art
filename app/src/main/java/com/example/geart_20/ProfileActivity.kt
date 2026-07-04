@@ -45,11 +45,6 @@ class ProfileActivity : AppCompatActivity() {
         val viewedUserId = intent.getStringExtra("USER_ID") ?: currentUserId
         val isOwnProfile = (viewedUserId == currentUserId)
 
-        FirebaseDatabase.getInstance().getReference("users").child(currentUserId).get()
-            .addOnSuccessListener { snapshot ->
-                currentUserName = snapshot.child("name").value?.toString() ?: "Anónimo"
-            }
-
         if (!isOwnProfile) {
             btnSaveProfile.visibility = View.GONE
             etName.isEnabled = false
@@ -141,7 +136,7 @@ class ProfileActivity : AppCompatActivity() {
                                     portfolioList.clear()
                                     for (data in commSnapshot.children) {
                                         val comm = data.getValue(Commission::class.java)
-                                        if (comm != null && comm.status == "COMPLETED") {
+                                        if (comm != null && (comm.status == "COMPLETED" || comm.status == "CANCELED")) {
                                             portfolioList.add(comm)
                                         }
                                     }
@@ -193,21 +188,26 @@ class ProfileActivity : AppCompatActivity() {
         btnPostComment.setOnClickListener {
             val text = etNewComment.text.toString().trim()
             if (text.isEmpty()) return@setOnClickListener
-            val comment = Comment(FirebaseDatabase.getInstance().getReference("comments").push().key ?: "", currentUserId, currentUserName, text)
-            FirebaseDatabase.getInstance().getReference("comments").child(viewedUserId).child(comment.id).setValue(comment)
+            // Fetch the user name from Firebase to avoid race condition
+            FirebaseDatabase.getInstance().getReference("users").child(currentUserId).get()
+                .addOnSuccessListener { snap ->
+                    val userName = snap.child("name").value?.toString() ?: "Anónimo"
+                    val comment = Comment(FirebaseDatabase.getInstance().getReference("comments").push().key ?: "", currentUserId, userName, text)
+                    FirebaseDatabase.getInstance().getReference("comments").child(viewedUserId).child(comment.id).setValue(comment)
 
-            if (viewedUserId != currentUserId) {
-                val notifId = FirebaseDatabase.getInstance().getReference("notifications").child(viewedUserId).push().key ?: return@setOnClickListener
-                val notif = com.example.geart_20.model.NotificationItem(
-                    id = notifId,
-                    type = "new_comment",
-                    message = "$currentUserName comentó en tu perfil: $text",
-                    relatedUserId = currentUserId,
-                    relatedUserName = currentUserName,
-                    timestamp = System.currentTimeMillis()
-                )
-                FirebaseDatabase.getInstance().getReference("notifications").child(viewedUserId).child(notifId).setValue(notif)
-            }
+                    if (viewedUserId != currentUserId) {
+                        val notifId = FirebaseDatabase.getInstance().getReference("notifications").child(viewedUserId).push().key ?: return@addOnSuccessListener
+                        val notif = com.example.geart_20.model.NotificationItem(
+                            id = notifId,
+                            type = "new_comment",
+                            message = "$userName comentó en tu perfil: $text",
+                            relatedUserId = currentUserId,
+                            relatedUserName = userName,
+                            timestamp = System.currentTimeMillis()
+                        )
+                        FirebaseDatabase.getInstance().getReference("notifications").child(viewedUserId).child(notifId).setValue(notif)
+                    }
+                }
         }
     }
 

@@ -26,6 +26,7 @@ class ChatActivity : AppCompatActivity() {
     private var isClient: Boolean = false
     private var isPersonal: Boolean = false
     private var otherUserId: String = ""
+    private var commissionStatus: String = ""
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
     private var isAcceptingPrice = false
     private val dbChats = FirebaseDatabase.getInstance().getReference("chats")
@@ -47,6 +48,7 @@ class ChatActivity : AppCompatActivity() {
         } else {
             commissionId = intent.getStringExtra("COMMISSION_ID") ?: return
             isClient = intent.getBooleanExtra("IS_CLIENT", false)
+            commissionStatus = intent.getStringExtra("COMMISSION_STATUS") ?: ""
             val commissionTitle = intent.getStringExtra("COMMISSION_TITLE") ?: "Chat de Comisión"
             findViewById<TextView>(R.id.tvChatTitle).text = commissionTitle
             val llActions = findViewById<LinearLayout>(R.id.llActions)
@@ -54,6 +56,8 @@ class ChatActivity : AppCompatActivity() {
                 findViewById<Button>(R.id.btnSendProgress).visibility = View.GONE
                 findViewById<Button>(R.id.btnSendFinal).visibility = View.GONE
             }
+            val btnCancel = findViewById<Button>(R.id.btnCancelCommission)
+            btnCancel.visibility = if (commissionStatus == "ACCEPTED") View.VISIBLE else View.GONE
             setupButtons()
         }
 
@@ -64,9 +68,11 @@ class ChatActivity : AppCompatActivity() {
         val rvChatMessages = findViewById<RecyclerView>(R.id.rvChatMessages)
         val messagesList = mutableListOf<ChatMessage>()
 
-        val adapter = ChatAdapter(currentUserId, messagesList) { msgId, nuevoPrecio ->
-            aceptarNuevoPrecio(msgId, nuevoPrecio)
-        }
+        val adapter = ChatAdapter(
+            currentUserId, messagesList,
+            onAcceptPriceClick = { msgId, nuevoPrecio -> aceptarNuevoPrecio(msgId, nuevoPrecio) },
+            onAcceptCancelClick = { msgId -> aceptarCancelacion(msgId) }
+        )
 
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
@@ -117,6 +123,17 @@ class ChatActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnSendFinal).setOnClickListener {
             if (isClient) return@setOnClickListener
             mostrarDialogoInput("Entregar Final", "Pega el link de la obra final (Esto completará la comisión):", "FINAL_PRODUCT")
+        }
+
+        findViewById<Button>(R.id.btnCancelCommission).setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Cancelar Comisión")
+                .setMessage("¿Estás seguro de solicitar la cancelación de esta comisión? La otra parte debe aceptar para que la cancelación sea efectiva.")
+                .setPositiveButton("Solicitar Cancelación") { _, _ ->
+                    enviarMensaje("Solicitud de cancelación", "CANCEL_REQUEST")
+                }
+                .setNegativeButton("Cancelar", null)
+                .show()
         }
     }
 
@@ -178,6 +195,28 @@ class ChatActivity : AppCompatActivity() {
             val msgId = dbChats.child(commissionId).push().key ?: return
             val chatMsg = ChatMessage(msgId, currentUserId, contenido, tipo)
             dbChats.child(commissionId).child(msgId).setValue(chatMsg)
+        }
+    }
+
+    private fun aceptarCancelacion(msgId: String) {
+        val ref = if (isPersonal) dbPersonalChats.child(chatId).child("messages") else dbChats.child(commissionId)
+        ref.child(msgId).child("accepted").setValue(true)
+        if (!isPersonal) {
+            dbCommissions.child(commissionId).child("status").setValue("CANCELED")
+            enviarMensaje("Comisión cancelada por acuerdo mutuo", "TEXT")
+            dbCommissions.child(commissionId).get().addOnSuccessListener { snap ->
+                val clientId = snap.child("clientId").value?.toString() ?: return@addOnSuccessListener
+                val title = snap.child("title").value?.toString() ?: "Comisión"
+                val notifId = FirebaseDatabase.getInstance().getReference("notifications").child(clientId).push().key ?: return@addOnSuccessListener
+                val notif = com.example.geart_20.model.NotificationItem(
+                    id = notifId,
+                    type = "commission_canceled",
+                    message = "La comisión \"$title\" ha sido cancelada",
+                    relatedId = commissionId,
+                    timestamp = System.currentTimeMillis()
+                )
+                FirebaseDatabase.getInstance().getReference("notifications").child(clientId).child(notifId).setValue(notif)
+            }
         }
     }
 

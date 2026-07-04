@@ -65,6 +65,18 @@
             android:textAllCaps="false"
             android:paddingHorizontal="16dp"
             android:background="@drawable/bg_chip_unselected"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnFilterCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Completadas"
+            android:textSize="13sp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/bg_chip_unselected"
             android:textColor="?attr/colorOnSurface" />
     </LinearLayout>
 

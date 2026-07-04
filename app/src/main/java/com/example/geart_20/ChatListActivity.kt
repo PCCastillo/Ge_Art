@@ -102,6 +102,7 @@ class ChatListActivity : AppCompatActivity() {
                                 "DIRECT_REQUEST" -> "Solicitud directa"
                                 "ACCEPTED" -> "En progreso"
                                 "COMPLETED" -> "Finalizada"
+                                "CANCELED" -> "Cancelada"
                                 else -> status
                             }
                             allConversations.add(Conversation(

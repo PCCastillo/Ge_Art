@@ -28,7 +28,7 @@ class NotificationsActivity : AppCompatActivity() {
         adapter = NotificationAdapter(notifications) { notif ->
             marcarComoLeida(notif)
             when (notif.type) {
-                "new_direct_commission", "commission_accepted", "commission_completed" -> {
+                "new_direct_commission", "commission_accepted", "commission_completed", "commission_canceled" -> {
                     startActivity(Intent(this, MainActivity::class.java))
                 }
                 "new_comment" -> {

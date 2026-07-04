@@ -20,7 +20,8 @@ import java.util.Locale
 class ChatAdapter(
     private val currentUserId: String,
     private var messages: List<ChatMessage>,
-    private val onAcceptPriceClick: (messageId: String, price: Double) -> Unit
+    private val onAcceptPriceClick: (messageId: String, price: Double) -> Unit,
+    private val onAcceptCancelClick: (messageId: String) -> Unit = {}
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -103,6 +104,23 @@ class ChatAdapter(
                     holder.btnAcceptPrice.setOnClickListener {
                         holder.btnAcceptPrice.visibility = View.GONE
                         onAcceptPriceClick(chat.id, price)
+                    }
+                }
+            }
+            "CANCEL_REQUEST" -> {
+                holder.llPriceUpdate.visibility = View.VISIBLE
+                holder.tvPriceText.text = if (chat.accepted) {
+                    "✓ Comisión cancelada por acuerdo mutuo"
+                } else {
+                    "Solicitud de cancelación"
+                }
+
+                if (chat.senderId != currentUserId && !chat.accepted) {
+                    holder.btnAcceptPrice.visibility = View.VISIBLE
+                    holder.btnAcceptPrice.text = "Aceptar Cancelación"
+                    holder.btnAcceptPrice.setOnClickListener {
+                        holder.btnAcceptPrice.visibility = View.GONE
+                        onAcceptCancelClick(chat.id)
                     }
                 }
             }
