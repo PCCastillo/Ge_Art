@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <Button
+        android:id="@+id/btnNewCommission"
+        style="@style/Widget.GeArt.Button.Ticket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_client_new_commission" />
+
+    <Button
+        android:id="@+id/btnExploreArtists"
+        style="@style/Widget.GeArt.Button.Outline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/main_client_explore_artists" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCommissionsClient"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginVertical="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layerType="software"
+        android:background="@drawable/divider_dashed"
+        android:layout_marginBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnViewProfile"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_my_profile" />
+
+        <Button
+            android:id="@+id/btnChats"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_chats" />
+
+        <Button
+            android:id="@+id/btnNotifications"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_notifications" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nav_logout" />
+    </LinearLayout>
+
+</LinearLayout>

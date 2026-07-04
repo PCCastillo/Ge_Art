@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivProfilePic"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_avatar_placeholder"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/tvRoleAndRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_loading"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.GeArt.BodyStrong"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btnDirectCommission"
+            style="@style/Widget.GeArt.Button.Ticket"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/profile_direct_commission"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btnChat"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/profile_send_message"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.GeArt.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_name_hint"
+                android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.GeArt.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etProfileImageUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_image_url_hint"
+                android:inputType="textUri"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.GeArt.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_bio_hint"
+                android:inputType="textMultiLine"
+                android:lines="3"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.GeArt.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSocialLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_social_links_hint"
+                android:inputType="textUri"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnSaveProfile"
+            style="@style/Widget.GeArt.Button.Ticket"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/profile_save_changes"/>
+
+        <!-- Solicitudes directas pendientes (solo visible para el dueño) -->
+        <TextView
+            android:id="@+id/tvDirectRequestsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_direct_requests_title"
+            android:textAppearance="@style/TextAppearance.GeArt.Eyebrow"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDirectRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tvPortfolioTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_portfolio_title"
+            android:textAppearance="@style/TextAppearance.GeArt.Eyebrow"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPortfolio"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layerType="software"
+            android:background="@drawable/divider_dashed"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_comments_title"
+            android:textAppearance="@style/TextAppearance.GeArt.Eyebrow"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComments"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.GeArt.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNewComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_new_comment_hint"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnPostComment"
+            style="@style/Widget.GeArt.Button.Outline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_post_comment"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

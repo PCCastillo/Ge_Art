@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llMessageRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp">
+
+    <LinearLayout
+        android:id="@+id/llBubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@drawable/bg_chat_bubble_other"
+        android:maxWidth="280dp">
+
+        <TextView
+            android:id="@+id/tvMessageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.GeArt.Body"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/flImageContainer"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivMessageImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/tvImageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:padding="4dp"
+                android:textAppearance="@style/TextAppearance.GeArt.Meta"
+                android:background="#AA000000"
+                android:textColor="@color/geart_paper"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/llPriceUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvPriceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.GeArt.Headline"
+                android:textColor="@color/geart_gold" />
+
+            <Button
+                android:id="@+id/btnAcceptPrice"
+                style="@style/Widget.GeArt.Button.Ticket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/chat_accept_price"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.GeArt.Meta"
+        android:layout_marginTop="2dp"
+        android:layout_marginHorizontal="4dp" />
+
+</LinearLayout>

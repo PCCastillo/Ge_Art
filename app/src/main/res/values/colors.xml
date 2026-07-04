@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta principal de GeArt (basada en landing page) -->
+
+    <!-- Light theme -->
+    <color name="geart_ink">#14120F</color>
+    <color name="geart_paper">#F2EDE4</color>
+    <color name="geart_pencil">#8F877A</color>
+    <color name="geart_line">#2A2620</color>
+    <color name="geart_accent">#E8734A</color>
+    <color name="geart_gold">#C9A227</color>
+
+    <!-- Light surface colors -->
+    <color name="geart_surface_light">#F2EDE4</color>
+    <color name="geart_surface_dark">#14120F</color>
+    <color name="geart_card_light">#E8E3DA</color>
+    <color name="geart_card_dark">#1E1B18</color>
+
+    <!-- Text colors -->
+    <color name="geart_text_primary_light">#14120F</color>
+    <color name="geart_text_secondary_light">#8F877A</color>
+    <color name="geart_text_primary_dark">#F2EDE4</color>
+    <color name="geart_text_secondary_dark">#8F877A</color>
+
+    <!-- Status colors -->
+    <color name="geart_status_pending">#8F877A</color>
+    <color name="geart_status_direct">#E8734A</color>
+    <color name="geart_status_accepted">#4A90D9</color>
+    <color name="geart_status_completed">#4CAF50</color>
+    <color name="geart_chat_bubble_mine">#E8734A</color>
+    <color name="geart_chat_bubble_other">#2A2620</color>
+
+    <!-- Legacy (para compatibilidad) -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Material3 overrides -->
+    <color name="md_theme_light_primary">#E8734A</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#FFDBCA</color>
+    <color name="md_theme_light_onPrimaryContainer">#2C160A</color>
+    <color name="md_theme_light_secondary">#8F877A</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_background">#F2EDE4</color>
+    <color name="md_theme_light_onBackground">#14120F</color>
+    <color name="md_theme_light_surface">#F2EDE4</color>
+    <color name="md_theme_light_onSurface">#14120F</color>
+    <color name="md_theme_light_surfaceVariant">#E8E3DA</color>
+    <color name="md_theme_light_onSurfaceVariant">#4B4640</color>
+    <color name="md_theme_light_outline">#7D766E</color>
+    <color name="md_theme_light_outlineVariant">#D1C9BF</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+
+    <color name="md_theme_dark_primary">#E8734A</color>
+    <color name="md_theme_dark_onPrimary">#3D200E</color>
+    <color name="md_theme_dark_primaryContainer">#66351B</color>
+    <color name="md_theme_dark_onPrimaryContainer">#FFDBCA</color>
+    <color name="md_theme_dark_secondary">#C4BBAE</color>
+    <color name="md_theme_dark_onSecondary">#2C2A26</color>
+    <color name="md_theme_dark_background">#14120F</color>
+    <color name="md_theme_dark_onBackground">#E4E0D8</color>
+    <color name="md_theme_dark_surface">#14120F</color>
+    <color name="md_theme_dark_onSurface">#E4E0D8</color>
+    <color name="md_theme_dark_surfaceVariant">#4B4640</color>
+    <color name="md_theme_dark_onSurfaceVariant">#C9C0B5</color>
+    <color name="md_theme_dark_outline">#938A80</color>
+    <color name="md_theme_dark_outlineVariant">#4B4640</color>
+    <color name="md_theme_dark_error">#FFB4AB</color>
+</resources>

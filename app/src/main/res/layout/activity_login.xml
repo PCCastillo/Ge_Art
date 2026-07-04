@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_brand_ge"
+            android:textAppearance="@style/TextAppearance.GeArt.Display"
+            android:textSize="34sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_brand_art"
+            android:textAppearance="@style/TextAppearance.GeArt.Display"
+            android:textSize="34sp"
+            android:textColor="@color/geart_accent"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_tagline"
+        android:textAppearance="@style/TextAppearance.GeArt.Eyebrow"
+        android:background="@drawable/bg_stamp_outline"
+        android:layout_marginBottom="32dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.GeArt.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_email_hint"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.GeArt.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RadioGroup
+        android:id="@+id/rgRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginVertical="20dp">
+
+        <RadioButton
+            android:id="@+id/rbClient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_role_client"
+            app:buttonTint="@color/geart_accent" />
+
+        <RadioButton
+            android:id="@+id/rbArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_role_artist"
+            android:layout_marginStart="24dp"
+            app:buttonTint="@color/geart_accent" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnLogin"
+        style="@style/Widget.GeArt.Button.Ticket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_signin" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        style="@style/Widget.GeArt.Button.Outline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_register"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
