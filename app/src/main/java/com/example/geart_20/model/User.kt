@@ -14,6 +14,5 @@ data class User(
     // Específicos para el Artista (el cliente simplemente los tendrá en 0 o vacíos)
     val commissionTableUrl: String = "", // Imagen de su tabla de precios
     val rating: Double = 0.0, // Promedio de estrellas
-    val ratingCount: Int = 0, // Cantidad de personas que lo han calificado
-    val fcmToken: String = "" // Token de Firebase Cloud Messaging para push notifications
+    val ratingCount: Int = 0 // Cantidad de personas que lo han calificado
 )

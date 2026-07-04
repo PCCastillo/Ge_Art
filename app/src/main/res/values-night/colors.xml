@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chip_border">@color/dark_chip_border</color>
+    <color name="surface_input">@color/dark_surface_input</color>
+    <color name="text_secondary">@color/dark_text_secondary</color>
+    <color name="chat_received_bg">@color/dark_surface</color>
+    <color name="image_placeholder">@color/dark_surface</color>
+</resources>

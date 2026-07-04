@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -96,10 +97,23 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
+        fun updateChips(selected: Button) {
+            val selectedBg = R.drawable.bg_chip_selected
+            val unselectedBg = R.drawable.bg_chip_unselected
+            val secondaryColor = androidx.core.content.ContextCompat.getColor(this@MainActivity, R.color.text_secondary)
+            btnFilterMarket?.setBackgroundResource(if (selected == btnFilterMarket) selectedBg else unselectedBg)
+            btnFilterDirect?.setBackgroundResource(if (selected == btnFilterDirect) selectedBg else unselectedBg)
+            btnFilterMine?.setBackgroundResource(if (selected == btnFilterMine) selectedBg else unselectedBg)
+            btnFilterMarket?.setTextColor(if (selected == btnFilterMarket) android.graphics.Color.WHITE else secondaryColor)
+            btnFilterDirect?.setTextColor(if (selected == btnFilterDirect) android.graphics.Color.WHITE else secondaryColor)
+            btnFilterMine?.setTextColor(if (selected == btnFilterMine) android.graphics.Color.WHITE else secondaryColor)
+        }
+
         // Listeners de los botones
-        btnFilterMarket?.setOnClickListener { currentArtistFilter = "MARKET"; updateDisplayedList() }
-        btnFilterDirect?.setOnClickListener { currentArtistFilter = "DIRECT"; updateDisplayedList() }
-        btnFilterMine?.setOnClickListener { currentArtistFilter = "MINE"; updateDisplayedList() }
+        btnFilterMarket?.setOnClickListener { currentArtistFilter = "MARKET"; updateDisplayedList(); updateChips(btnFilterMarket) }
+        btnFilterDirect?.setOnClickListener { currentArtistFilter = "DIRECT"; updateDisplayedList(); updateChips(btnFilterDirect) }
+        btnFilterMine?.setOnClickListener { currentArtistFilter = "MINE"; updateDisplayedList(); updateChips(btnFilterMine) }
+        updateChips(btnFilterMarket)
 
         // Descargar TODAS las comisiones y dejar que la función de arriba las filtre
         dbRef.addValueEventListener(object : com.google.firebase.database.ValueEventListener {
@@ -116,13 +130,13 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: com.google.firebase.database.DatabaseError) {}
         })
 
-        findViewById<Button>(R.id.btnViewProfile)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnViewProfile)?.setOnClickListener {
             startActivity(android.content.Intent(this, ProfileActivity::class.java))
         }
-        findViewById<Button>(R.id.btnChats)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnChats)?.setOnClickListener {
             startActivity(android.content.Intent(this, ChatListActivity::class.java))
         }
-        findViewById<Button>(R.id.btnNotifications)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnNotifications)?.setOnClickListener {
             startActivity(android.content.Intent(this, NotificationsActivity::class.java))
         }
     }
@@ -150,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         setupLogout()
 
         // 1. Botón para abrir el perfil (Fase 4)
-        findViewById<Button>(R.id.btnViewProfile)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnViewProfile)?.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
@@ -190,16 +204,16 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnExploreArtists)?.setOnClickListener {
             startActivity(android.content.Intent(this, ExploreActivity::class.java))
         }
-        findViewById<Button>(R.id.btnChats)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnChats)?.setOnClickListener {
             startActivity(android.content.Intent(this, ChatListActivity::class.java))
         }
-        findViewById<Button>(R.id.btnNotifications)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnNotifications)?.setOnClickListener {
             startActivity(android.content.Intent(this, NotificationsActivity::class.java))
         }
     }
 
     private fun setupLogout() {
-        findViewById<Button>(R.id.btnLogout)?.setOnClickListener {
+        findViewById<TextView>(R.id.btnLogout)?.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             irAlLogin()
         }
@@ -251,7 +265,7 @@ class MainActivity : AppCompatActivity() {
         // 3. Precio
         layout.addView(TextView(this).apply {
             text = "Precio ofrecido: $${commission.price}"; textSize = 16f
-            setTextColor(resources.getColor(android.R.color.holo_green_dark, null))
+            setTextColor(resources.getColor(R.color.blue_primary, null))
             setTypeface(null, android.graphics.Typeface.BOLD); setPadding(0, 0, 0, 16)
         })
 
@@ -273,8 +287,8 @@ class MainActivity : AppCompatActivity() {
         layout.addView(tvClient)
         FirebaseDatabase.getInstance().getReference("users").child(commission.clientId).get().addOnSuccessListener {
             val name = it.child("name").value ?: "Usuario"
-            tvClient.text = "👤 Solicitado por: $name (Ver Perfil)"
-            tvClient.setTextColor(resources.getColor(android.R.color.holo_blue_dark, null))
+            tvClient.text = "Solicitado por: $name (Ver Perfil)"
+            tvClient.setTextColor(resources.getColor(R.color.blue_primary, null))
             tvClient.setOnClickListener { startActivity(android.content.Intent(this, ProfileActivity::class.java).putExtra("USER_ID", commission.clientId)) }
         }
 
@@ -283,8 +297,8 @@ class MainActivity : AppCompatActivity() {
             layout.addView(tvArtist)
             FirebaseDatabase.getInstance().getReference("users").child(commission.artistId).get().addOnSuccessListener {
                 val name = it.child("name").value ?: "Usuario"
-                tvArtist.text = "🎨 Asignado a: $name (Ver Perfil)"
-                tvArtist.setTextColor(resources.getColor(android.R.color.holo_purple, null))
+                tvArtist.text = "Asignado a: $name (Ver Perfil)"
+                tvArtist.setTextColor(resources.getColor(R.color.blue_primary, null))
                 tvArtist.setOnClickListener { startActivity(android.content.Intent(this, ProfileActivity::class.java).putExtra("USER_ID", commission.artistId)) }
             }
         }

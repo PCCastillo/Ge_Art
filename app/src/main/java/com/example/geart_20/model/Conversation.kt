@@ -9,5 +9,6 @@ data class Conversation(
     val lastTimestamp: Long = 0L,
     val otherUserId: String = "",
     val commissionId: String = "",
+    val clientId: String = "",
     val unread: Boolean = false
 )

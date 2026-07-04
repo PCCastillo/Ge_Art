@@ -1,10 +1,10 @@
 package com.example.geart_20.ui
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,17 +19,20 @@ import java.util.Locale
 
 class ChatAdapter(
     private val currentUserId: String,
-    private val isClient: Boolean,
-    private val messages: MutableList<ChatMessage>,
-    private val onAcceptPriceClick: (Double) -> Unit
+    private var messages: List<ChatMessage>,
+    private val onAcceptPriceClick: (messageId: String, price: Double) -> Unit
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-    fun updateMessages(newMessages: List<ChatMessage>) {
-        messages.clear()
-        messages.addAll(newMessages)
-        notifyDataSetChanged()
+    class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val llMessageRoot: LinearLayout = view.findViewById(R.id.llMessageRoot)
+        val llBubble: LinearLayout = view.findViewById(R.id.llBubble)
+        val tvMessageText: TextView = view.findViewById(R.id.tvMessageText)
+        val ivMessageImage: ImageView = view.findViewById(R.id.ivMessageImage)
+        val tvImageLabel: TextView = view.findViewById(R.id.tvImageLabel)
+        val llPriceUpdate: LinearLayout = view.findViewById(R.id.llPriceUpdate)
+        val tvPriceText: TextView = view.findViewById(R.id.tvPriceText)
+        val btnAcceptPrice: Button = view.findViewById(R.id.btnAcceptPrice)
+        val tvTimestamp: TextView = view.findViewById(R.id.tvTimestamp)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
@@ -38,70 +41,78 @@ class ChatAdapter(
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val msg = messages[position]
-        val isMine = msg.senderId == currentUserId
+        val chat = messages[position]
 
-        holder.llMessageRoot.gravity = if (isMine) android.view.Gravity.END else android.view.Gravity.START
-
-        val context = holder.itemView.context
-        if (isMine) {
-            holder.llBubble.background = ContextCompat.getDrawable(context, R.drawable.bg_chat_bubble_mine)
-            holder.tvMessageText.setTextColor(ContextCompat.getColor(context, R.color.geart_ink))
+        // 1. Alineación visual: Mis mensajes a la derecha (azules), los de la otra persona a la izquierda (grises)
+        if (chat.senderId == currentUserId) {
+            holder.llMessageRoot.gravity = Gravity.END
+            holder.llBubble.setBackgroundResource(R.drawable.bg_chat_sent)
+            holder.tvMessageText.setTextColor(android.graphics.Color.WHITE)
+            holder.tvImageLabel.setTextColor(android.graphics.Color.WHITE)
+            holder.tvPriceText.setTextColor(android.graphics.Color.WHITE)
+            holder.tvTimestamp.gravity = Gravity.END
         } else {
-            holder.llBubble.background = ContextCompat.getDrawable(context, R.drawable.bg_chat_bubble_other)
-            holder.tvMessageText.setTextColor(ContextCompat.getColor(context, R.color.geart_paper))
+            holder.llMessageRoot.gravity = Gravity.START
+            holder.llBubble.setBackgroundResource(R.drawable.bg_chat_received)
+            holder.tvMessageText.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.context, R.color.text_secondary))
+            holder.tvImageLabel.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.context, R.color.text_secondary))
+            holder.tvPriceText.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.context, R.color.text_secondary))
+            holder.tvTimestamp.gravity = Gravity.START
         }
 
-        if (msg.type == "TEXT") {
-            holder.tvMessageText.visibility = View.VISIBLE
-            holder.tvMessageText.text = msg.message
-        } else {
-            holder.tvMessageText.visibility = View.GONE
-        }
+        // Formateamos la hora (Ej: 14:30)
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        holder.tvTimestamp.text = sdf.format(Date(chat.timestamp))
 
-        if (msg.type == "PROGRESS_IMAGE" || msg.type == "FINAL_PRODUCT") {
-            holder.flImageContainer.visibility = View.VISIBLE
-            holder.ivMessageImage.visibility = View.VISIBLE
-            holder.tvImageLabel.visibility = View.VISIBLE
-            Glide.with(holder.itemView.context).load(msg.message).centerCrop().into(holder.ivMessageImage)
-            holder.tvImageLabel.text = if (msg.type == "PROGRESS_IMAGE") "Avance de la obra" else "Producto Final Entregado"
-        } else {
-            holder.flImageContainer.visibility = View.GONE
-            holder.ivMessageImage.visibility = View.GONE
-            holder.tvImageLabel.visibility = View.GONE
-        }
+        // 2. IMPORTANTE: Ocultar todo antes de dibujar (para evitar que se reciclen vistas incorrectas al hacer scroll)
+        holder.tvMessageText.visibility = View.GONE
+        holder.ivMessageImage.visibility = View.GONE
+        holder.tvImageLabel.visibility = View.GONE
+        holder.llPriceUpdate.visibility = View.GONE
+        holder.btnAcceptPrice.visibility = View.GONE
 
-        if (msg.type == "PRICE_UPDATE") {
-            holder.llPriceUpdate.visibility = View.VISIBLE
-            holder.tvPriceText.text = "$${msg.message}"
-            if (isClient && !isMine) {
-                holder.btnAcceptPrice.visibility = View.VISIBLE
-                holder.btnAcceptPrice.setOnClickListener {
-                    val price = msg.message.toDoubleOrNull()
-                    if (price != null) onAcceptPriceClick(price)
-                }
-            } else {
-                holder.btnAcceptPrice.visibility = View.GONE
+        // 3. Activar los elementos según el TIPO de mensaje
+        when (chat.type) {
+            "TEXT" -> {
+                holder.tvMessageText.visibility = View.VISIBLE
+                holder.tvMessageText.text = chat.message
             }
-        } else {
-            holder.llPriceUpdate.visibility = View.GONE
-        }
+            "PROGRESS_IMAGE" -> {
+                holder.ivMessageImage.visibility = View.VISIBLE
+                holder.tvImageLabel.visibility = View.VISIBLE
+                holder.tvImageLabel.text = "Avance de la obra"
+                Glide.with(holder.itemView.context).load(chat.message).into(holder.ivMessageImage)
+            }
+            "FINAL_PRODUCT" -> {
+                holder.ivMessageImage.visibility = View.VISIBLE
+                holder.tvImageLabel.visibility = View.VISIBLE
+                holder.tvImageLabel.text = "Producto Final Entregado"
+                Glide.with(holder.itemView.context).load(chat.message).into(holder.ivMessageImage)
+            }
+            "PRICE_UPDATE" -> {
+                holder.llPriceUpdate.visibility = View.VISIBLE
+                val price = chat.message.toDoubleOrNull() ?: 0.0
+                holder.tvPriceText.text = if (chat.accepted) {
+                    "✓ Precio de $$price aceptado"
+                } else {
+                    "Propuesta de nuevo precio: $$price"
+                }
 
-        holder.tvTimestamp.text = timeFormat.format(Date(msg.timestamp))
+                if (chat.senderId != currentUserId && !chat.accepted) {
+                    holder.btnAcceptPrice.visibility = View.VISIBLE
+                    holder.btnAcceptPrice.setOnClickListener {
+                        holder.btnAcceptPrice.visibility = View.GONE
+                        onAcceptPriceClick(chat.id, price)
+                    }
+                }
+            }
+        }
     }
 
     override fun getItemCount() = messages.size
 
-    class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val llMessageRoot: LinearLayout = itemView.findViewById(R.id.llMessageRoot)
-        val llBubble: LinearLayout = itemView.findViewById(R.id.llBubble)
-        val tvMessageText: TextView = itemView.findViewById(R.id.tvMessageText)
-        val flImageContainer: FrameLayout = itemView.findViewById(R.id.flImageContainer)
-        val ivMessageImage: ImageView = itemView.findViewById(R.id.ivMessageImage)
-        val tvImageLabel: TextView = itemView.findViewById(R.id.tvImageLabel)
-        val llPriceUpdate: LinearLayout = itemView.findViewById(R.id.llPriceUpdate)
-        val tvPriceText: TextView = itemView.findViewById(R.id.tvPriceText)
-        val btnAcceptPrice: Button = itemView.findViewById(R.id.btnAcceptPrice)
-        val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
+    fun updateMessages(newMessages: List<ChatMessage>) {
+        messages = newMessages
+        notifyDataSetChanged()
     }
 }

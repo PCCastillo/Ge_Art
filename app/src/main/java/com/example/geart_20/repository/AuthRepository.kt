@@ -9,28 +9,27 @@ class AuthRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseDatabase.getInstance().getReference("users")
 
-    suspend fun registerUser(email: String, pass: String, name: String, role: String): Result<Unit> {
+    suspend fun registerUser(email: String, pass: String, name: String, role: String): Boolean {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, pass).await()
-            val uid = result.user?.uid
-                ?: return Result.failure(IllegalStateException("No se pudo crear el usuario"))
+            val uid = result.user?.uid ?: return false
 
             val newUser = User(id = uid, name = name, email = email, role = role)
             db.child(uid).setValue(newUser).await()
-            Result.success(Unit)
+            true
         } catch (e: Exception) {
             e.printStackTrace()
-            Result.failure(e)
+            false
         }
     }
 
-    suspend fun signIn(email: String, pass: String): Result<Unit> {
+    suspend fun signIn(email: String, pass: String): Boolean {
         return try {
             auth.signInWithEmailAndPassword(email, pass).await()
-            Result.success(Unit)
+            true
         } catch (e: Exception) {
             e.printStackTrace()
-            Result.failure(e)
+            false
         }
     }
 }

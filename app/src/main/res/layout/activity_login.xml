@@ -1,106 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:padding="32dp"
-    android:gravity="center">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_brand_ge"
-            android:textAppearance="@style/TextAppearance.GeArt.Display"
-            android:textSize="34sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_brand_art"
-            android:textAppearance="@style/TextAppearance.GeArt.Display"
-            android:textSize="34sp"
-            android:textColor="@color/geart_accent"/>
-    </LinearLayout>
+    android:background="?android:attr/colorBackground">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_tagline"
-        android:textAppearance="@style/TextAppearance.GeArt.Eyebrow"
-        android:background="@drawable/bg_stamp_outline"
-        android:layout_marginBottom="32dp"/>
+        android:text="GeArt"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="@color/blue_primary"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conecta con artistas"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurface"
+        android:alpha="0.55"
+        android:layout_marginBottom="40dp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.GeArt.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/login_email_hint"
-            android:inputType="textEmailAddress" />
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="?attr/colorOnSurface"
+            android:background="@null" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.GeArt.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+        android:layout_marginBottom="20dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/etPass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/login_password_hint"
-            android:inputType="textPassword" />
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textColor="?attr/colorOnSurface"
+            android:background="@null" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tipo de cuenta"
+        android:textSize="13sp"
+        android:textColor="?attr/colorOnSurface"
+        android:alpha="0.55"
+        android:layout_marginBottom="8dp" />
 
     <RadioGroup
         android:id="@+id/rgRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginVertical="20dp">
+        android:gravity="center">
 
         <RadioButton
             android:id="@+id/rbClient"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/login_role_client"
-            app:buttonTint="@color/geart_accent" />
+            android:text="Cliente"
+            android:textColor="?attr/colorOnSurface"
+            android:buttonTint="@color/blue_primary" />
 
         <RadioButton
             android:id="@+id/rbArtist"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/login_role_artist"
-            android:layout_marginStart="24dp"
-            app:buttonTint="@color/geart_accent" />
+            android:text="Artista"
+            android:textColor="?attr/colorOnSurface"
+            android:buttonTint="@color/blue_primary" />
     </RadioGroup>
 
     <Button
-        android:id="@+id/btnLogin"
-        style="@style/Widget.GeArt.Button.Ticket"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_signin" />
+        android:layout_height="48dp"
+        android:text="Registrarse"
+        android:layout_marginTop="24dp"
+        android:textSize="15sp"
+        android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/btnRegister"
-        style="@style/Widget.GeArt.Button.Outline"
+        android:id="@+id/btnLogin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_register"
-        android:layout_marginTop="12dp" />
+        android:layout_height="48dp"
+        android:text="Iniciar sesión"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        android:textAllCaps="false"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

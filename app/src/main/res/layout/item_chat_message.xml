@@ -4,48 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="4dp">
+    android:paddingVertical="4dp"
+    android:paddingHorizontal="12dp">
 
     <LinearLayout
         android:id="@+id/llBubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/bg_chat_received"
         android:padding="12dp"
-        android:background="@drawable/bg_chat_bubble_other"
-        android:maxWidth="280dp">
+        android:maxWidth="300dp">
 
         <TextView
             android:id="@+id/tvMessageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.GeArt.Body"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="15sp"
             android:visibility="gone" />
 
-        <FrameLayout
-            android:id="@+id/flImageContainer"
+        <ImageView
+            android:id="@+id/ivMessageImage"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:visibility="gone">
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginBottom="4dp"
+            android:background="@color/image_placeholder" />
 
-            <ImageView
-                android:id="@+id/ivMessageImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/tvImageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:padding="4dp"
-                android:textAppearance="@style/TextAppearance.GeArt.Meta"
-                android:background="#AA000000"
-                android:textColor="@color/geart_paper"
-                android:visibility="gone" />
-        </FrameLayout>
+        <TextView
+            android:id="@+id/tvImageLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avance del Artista"
+            android:textColor="?attr/colorOnSurface"
+            android:alpha="0.6"
+            android:textSize="11sp"
+            android:visibility="gone"
+            android:textStyle="italic" />
 
         <LinearLayout
             android:id="@+id/llPriceUpdate"
@@ -58,17 +55,19 @@
                 android:id="@+id/tvPriceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.GeArt.Headline"
-                android:textColor="@color/geart_gold" />
+                android:text="Propuesta: $0.0"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnAcceptPrice"
-                style="@style/Widget.GeArt.Button.Ticket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="@string/chat_accept_price"
-                android:visibility="gone" />
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:text="Aceptar Precio"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
         </LinearLayout>
 
     </LinearLayout>
@@ -77,8 +76,9 @@
         android:id="@+id/tvTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.GeArt.Meta"
-        android:layout_marginTop="2dp"
-        android:layout_marginHorizontal="4dp" />
+        android:textColor="?attr/colorOnSurface"
+        android:alpha="0.4"
+        android:textSize="10sp"
+        android:layout_marginTop="2dp" />
 
 </LinearLayout>

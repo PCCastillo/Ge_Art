@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,7 @@ class ChatListActivity : AppCompatActivity() {
                     startActivity(Intent(this, ChatActivity::class.java).apply {
                         putExtra("COMMISSION_ID", conv.commissionId)
                         putExtra("COMMISSION_TITLE", conv.title)
-                        putExtra("IS_CLIENT", false)
+                        putExtra("IS_CLIENT", conv.clientId == currentUserId)
                     })
                 }
                 "personal" -> {
@@ -50,15 +51,26 @@ class ChatListActivity : AppCompatActivity() {
         rvConversations.layoutManager = LinearLayoutManager(this)
         rvConversations.adapter = adapter
 
-        findViewById<Button>(R.id.btnFilterAll).setOnClickListener {
-            currentFilter = "all"; aplicarFiltro()
+        val btnAll = findViewById<Button>(R.id.btnFilterAll)
+        val btnCommissions = findViewById<Button>(R.id.btnFilterCommissions)
+        val btnPersonal = findViewById<Button>(R.id.btnFilterPersonal)
+
+        fun updateChips(selected: Button) {
+            val selectedBg = R.drawable.bg_chip_selected
+            val unselectedBg = R.drawable.bg_chip_unselected
+            btnAll.setBackgroundResource(if (selected == btnAll) selectedBg else unselectedBg)
+            btnCommissions.setBackgroundResource(if (selected == btnCommissions) selectedBg else unselectedBg)
+            btnPersonal.setBackgroundResource(if (selected == btnPersonal) selectedBg else unselectedBg)
+            val secondaryColor = androidx.core.content.ContextCompat.getColor(this@ChatListActivity, R.color.text_secondary)
+            btnAll.setTextColor(if (selected == btnAll) android.graphics.Color.WHITE else secondaryColor)
+            btnCommissions.setTextColor(if (selected == btnCommissions) android.graphics.Color.WHITE else secondaryColor)
+            btnPersonal.setTextColor(if (selected == btnPersonal) android.graphics.Color.WHITE else secondaryColor)
         }
-        findViewById<Button>(R.id.btnFilterCommissions).setOnClickListener {
-            currentFilter = "commission"; aplicarFiltro()
-        }
-        findViewById<Button>(R.id.btnFilterPersonal).setOnClickListener {
-            currentFilter = "personal"; aplicarFiltro()
-        }
+
+        btnAll.setOnClickListener { currentFilter = "all"; aplicarFiltro(); updateChips(btnAll) }
+        btnCommissions.setOnClickListener { currentFilter = "commission"; aplicarFiltro(); updateChips(btnCommissions) }
+        btnPersonal.setOnClickListener { currentFilter = "personal"; aplicarFiltro(); updateChips(btnPersonal) }
+        updateChips(btnAll)
 
         cargarConversaciones()
     }
@@ -98,7 +110,8 @@ class ChatListActivity : AppCompatActivity() {
                                 title = title,
                                 subtitle = "Comisión - $statusText",
                                 commissionId = data.key ?: "",
-                                lastTimestamp = 0L
+                                lastTimestamp = 0L,
+                                clientId = clientId
                             ))
                         }
                     }

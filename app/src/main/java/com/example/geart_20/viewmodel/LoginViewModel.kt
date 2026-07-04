@@ -6,12 +6,12 @@ import com.example.geart_20.repository.AuthRepository
 class LoginViewModel : ViewModel() {
     private val authRepo = AuthRepository()
 
-    suspend fun handleLogin(email: String, pass: String, name: String, role: String): Result<Unit> {
+    suspend fun handleLogin(email: String, pass: String, name: String, role: String): Boolean {
         return authRepo.registerUser(email, pass, name, role)
     }
 
     // Esta función debe existir
-    suspend fun handleSignIn(email: String, pass: String): Result<Unit> {
+    suspend fun handleSignIn(email: String, pass: String): Boolean {
         return authRepo.signIn(email, pass)
     }
 }

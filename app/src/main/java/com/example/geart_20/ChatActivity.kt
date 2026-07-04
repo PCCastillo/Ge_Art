@@ -27,6 +27,7 @@ class ChatActivity : AppCompatActivity() {
     private var isPersonal: Boolean = false
     private var otherUserId: String = ""
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    private var isAcceptingPrice = false
     private val dbChats = FirebaseDatabase.getInstance().getReference("chats")
     private val dbPersonalChats = FirebaseDatabase.getInstance().getReference("personalChats")
     private val dbCommissions = FirebaseDatabase.getInstance().getReference("commissions")
@@ -50,7 +51,8 @@ class ChatActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvChatTitle).text = commissionTitle
             val llActions = findViewById<LinearLayout>(R.id.llActions)
             if (isClient) {
-                llActions.visibility = View.GONE
+                findViewById<Button>(R.id.btnSendProgress).visibility = View.GONE
+                findViewById<Button>(R.id.btnSendFinal).visibility = View.GONE
             }
             setupButtons()
         }
@@ -62,8 +64,8 @@ class ChatActivity : AppCompatActivity() {
         val rvChatMessages = findViewById<RecyclerView>(R.id.rvChatMessages)
         val messagesList = mutableListOf<ChatMessage>()
 
-        val adapter = ChatAdapter(currentUserId, isClient, messagesList) { nuevoPrecio ->
-            aceptarNuevoPrecio(nuevoPrecio)
+        val adapter = ChatAdapter(currentUserId, messagesList) { msgId, nuevoPrecio ->
+            aceptarNuevoPrecio(msgId, nuevoPrecio)
         }
 
         val layoutManager = LinearLayoutManager(this)
@@ -108,10 +110,12 @@ class ChatActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnSendProgress).setOnClickListener {
+            if (isClient) return@setOnClickListener
             mostrarDialogoInput("Enviar Avance", "Pega el link de la imagen de progreso:", "PROGRESS_IMAGE")
         }
 
         findViewById<Button>(R.id.btnSendFinal).setOnClickListener {
+            if (isClient) return@setOnClickListener
             mostrarDialogoInput("Entregar Final", "Pega el link de la obra final (Esto completará la comisión):", "FINAL_PRODUCT")
         }
     }
@@ -147,6 +151,9 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun enviarMensaje(contenido: String, tipo: String) {
+        if (tipo == "PROGRESS_IMAGE" || tipo == "FINAL_PRODUCT") {
+            if (isClient) return
+        }
         if (isPersonal) {
             val msgId = dbPersonalChats.child(chatId).child("messages").push().key ?: return
             val chatMsg = ChatMessage(msgId, currentUserId, contenido, tipo)
@@ -174,10 +181,17 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun aceptarNuevoPrecio(nuevoPrecio: Double) {
+    private fun aceptarNuevoPrecio(msgId: String, nuevoPrecio: Double) {
+        if (isAcceptingPrice) return
+        isAcceptingPrice = true
+        val ref = if (isPersonal) dbPersonalChats.child(chatId).child("messages") else dbChats.child(commissionId)
+        ref.child(msgId).child("accepted").setValue(true)
         dbCommissions.child(commissionId).child("price").setValue(nuevoPrecio).addOnSuccessListener {
+            isAcceptingPrice = false
             Toast.makeText(this, "Precio actualizado a $$nuevoPrecio", Toast.LENGTH_SHORT).show()
-            enviarMensaje("El cliente ha aceptado el nuevo precio de $$nuevoPrecio.", "TEXT")
+            enviarMensaje("Precio aceptado: $$nuevoPrecio", "TEXT")
+        }.addOnFailureListener {
+            isAcceptingPrice = false
         }
     }
 

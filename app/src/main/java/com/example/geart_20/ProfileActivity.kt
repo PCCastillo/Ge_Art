@@ -257,7 +257,7 @@ class ProfileActivity : AppCompatActivity() {
         layout.addView(TextView(this).apply {
             text = "Precio: $${commission.price}"
             textSize = 16f
-            setTextColor(resources.getColor(android.R.color.holo_green_dark, null))
+            setTextColor(resources.getColor(R.color.blue_primary, null))
             setTypeface(null, android.graphics.Typeface.BOLD)
             setPadding(0, 0, 0, 8)
         })
@@ -275,7 +275,7 @@ class ProfileActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 val name = it.child("name").value ?: "Usuario"
                 tvClient.text = "Solicitado por: $name"
-                tvClient.setTextColor(resources.getColor(android.R.color.holo_blue_dark, null))
+                tvClient.setTextColor(resources.getColor(R.color.blue_primary, null))
                 tvClient.setPadding(0, 0, 0, 16)
                 tvClient.setOnClickListener {
                     startActivity(android.content.Intent(this@ProfileActivity, ProfileActivity::class.java).putExtra("USER_ID", commission.clientId))

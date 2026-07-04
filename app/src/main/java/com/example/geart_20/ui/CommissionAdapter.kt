@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.geart_20.R
 import com.example.geart_20.model.Commission
@@ -39,9 +38,6 @@ class CommissionAdapter(
 
         holder.tvPrice.text = "$${commission.price}"
         holder.tvStatus.text = commission.status
-        holder.tvStatus.setTextColor(
-            ContextCompat.getColor(holder.itemView.context, statusColorRes(commission.status))
-        )
 
         holder.itemView.setOnClickListener {
             onItemClick(commission)
@@ -49,12 +45,4 @@ class CommissionAdapter(
     }
 
     override fun getItemCount() = commissions.size
-
-    private fun statusColorRes(status: String): Int = when (status) {
-        "PENDING" -> R.color.geart_status_pending
-        "DIRECT_REQUEST" -> R.color.geart_status_direct
-        "ACCEPTED" -> R.color.geart_status_accepted
-        "COMPLETED" -> R.color.geart_status_completed
-        else -> R.color.geart_pencil
-    }
 }

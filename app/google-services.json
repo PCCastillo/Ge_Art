@@ -1,14 +1,33 @@
 {
   "project_info": {
-    "project_number": "12153916714",
-    "firebase_url": "https://geart-736d4-default-rtdb.firebaseio.com",
-    "project_id": "geart-736d4",
-    "storage_bucket": "geart-736d4.firebasestorage.app"
+    "project_number": "396161193055",
+    "firebase_url": "https://geart-d92cf-default-rtdb.firebaseio.com",
+    "project_id": "geart-d92cf",
+    "storage_bucket": "geart-d92cf.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:12153916714:android:30b08dd20e567115ed2253",
+        "mobilesdk_app_id": "1:396161193055:android:bcd0a7ecf8c82e6a5777ea",
+        "android_client_info": {
+          "package_name": "com.example.geart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdn1rh7BymayEzVsitH5KeQwdhsVDS2Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396161193055:android:b5a6f05332f50d535777ea",
         "android_client_info": {
           "package_name": "com.example.geart_20"
         }
@@ -16,7 +35,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDD1bk9-UZLewPGtyMLjJbVEY6YPvToxPk"
+          "current_key": "AIzaSyAdn1rh7BymayEzVsitH5KeQwdhsVDS2Cs"
         }
       ],
       "services": {

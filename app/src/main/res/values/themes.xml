@@ -1,39 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.GeArt_20" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Primary / Accent -->
-        <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
-
-        <!-- Secondary -->
-        <item name="colorSecondary">@color/md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-
-        <!-- Background & Surface -->
-        <item name="android:colorBackground">@color/md_theme_light_background</item>
-        <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
-        <item name="colorSurface">@color/md_theme_light_surface</item>
-        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-        <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/md_theme_light_onSurfaceVariant</item>
-
-        <!-- Outline -->
-        <item name="colorOutline">@color/md_theme_light_outline</item>
-
-        <!-- Error -->
-        <item name="colorError">@color/md_theme_light_error</item>
-
-        <!-- Status bar -->
-        <item name="android:statusBarColor">@color/geart_accent</item>
-        <item name="android:navigationBarColor">@color/geart_surface_light</item>
-
-        <!-- Typography & component defaults -->
-        <item name="android:fontFamily">@font/inter</item>
-        <item name="materialButtonStyle">@style/Widget.GeArt.Button.Outline</item>
-        <item name="textInputStyle">@style/Widget.GeArt.TextInputLayout</item>
+    <style name="Theme.GeArt_20" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/blue_light</item>
+        <item name="colorSecondary">@color/blue_primary</item>
+        <item name="android:colorBackground">@color/light_bg</item>
+        <item name="colorSurface">@color/light_surface</item>
+        <item name="colorOnSurface">@color/light_text</item>
+        <item name="colorOnBackground">@color/light_text</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
-
 </resources>

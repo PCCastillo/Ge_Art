@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +20,7 @@ class ArtistAdapter(
         val ivPic: ImageView = view.findViewById(R.id.ivArtistPic)
         val tvName: TextView = view.findViewById(R.id.tvArtistName)
         val tvRating: TextView = view.findViewById(R.id.tvArtistRating)
-        val btnView: Button = view.findViewById(R.id.btnViewArtist)
+        val btnView: TextView = view.findViewById(R.id.btnViewArtist)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
