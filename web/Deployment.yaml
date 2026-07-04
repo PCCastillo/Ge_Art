@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geart-web
+  namespace: "2023203911"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geart-web
+  template:
+    metadata:
+      labels:
+        app: geart-web
+    spec:
+      containers:
+        - name: geart-web
+          image: mateou26/geart-web:v2
+          ports:
+            - containerPort: 80

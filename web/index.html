@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeArt — Encargos de arte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#161311;
+      --paper:#fdfcfa;
+      --pencil:#7a7268;
+      --line:#e7e2d8;
+      --accent:#e8734a;
+      --gold:#b8871f;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      background:var(--paper);
+      color:var(--ink);
+      font-family:'Inter',sans-serif;
+      line-height:1.55;
+    }
+    ::selection{background:var(--accent);color:#fff}
+
+    .wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+    header{padding:18px 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.3rem;letter-spacing:.02em}
+    .logo img{width:38px;height:38px;border-radius:50%;background:#fff}
+    .logo em{color:var(--accent);font-style:normal}
+    nav a{color:var(--pencil);text-decoration:none;font-size:.9rem;margin-left:28px}
+    nav a:hover{color:var(--paper)}
+
+    .hero{padding:96px 0 72px;position:relative}
+    .stamp{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--gold);border:1px solid var(--gold);
+      display:inline-block;padding:5px 12px;border-radius:2px;margin-bottom:28px;
+    }
+    h1{
+      font-family:'Bricolage Grotesque',sans-serif;
+      font-weight:700;
+      font-size:clamp(2.4rem,6vw,4.4rem);
+      line-height:1.04;
+      letter-spacing:-.01em;
+      max-width:11ch;
+    }
+    h1 .stroke{color:var(--accent);font-style:italic}
+    .lede{margin-top:24px;max-width:46ch;color:#54504a;font-size:1.08rem}
+
+    .cta-row{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .ticket{
+      display:inline-flex;align-items:center;gap:12px;
+      background:var(--accent);color:var(--ink);
+      padding:16px 24px;border-radius:14px;
+      font-weight:600;text-decoration:none;font-size:1rem;
+      position:relative;
+      transition:transform .15s ease;
+    }
+    .ticket:hover{transform:translateY(-2px)}
+    .ticket small{display:block;font-weight:500;font-size:.72rem;opacity:.75;font-family:'JetBrains Mono',monospace}
+    .ticket::before,.ticket::after{
+      content:"";position:absolute;top:50%;width:14px;height:14px;
+      background:var(--paper);border-radius:50%;transform:translateY(-50%);
+    }
+    .ticket::before{left:-7px}
+    .ticket::after{right:-7px}
+    .meta{font-size:.82rem;color:var(--pencil);font-family:'JetBrains Mono',monospace}
+
+    .divider{border:0;border-top:1px dashed var(--line);margin:0}
+
+    section{padding:64px 0}
+    .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+    h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:1.9rem;margin-bottom:20px;max-width:20ch}
+
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+    .flow div{padding:24px 20px;border-right:1px solid var(--line)}
+    .flow div:last-child{border-right:none}
+    .flow span{font-family:'JetBrains Mono',monospace;color:var(--pencil);font-size:.75rem}
+    .flow p{margin-top:8px;font-size:.94rem}
+
+    .roles{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+    .roles div{background:#fff;padding:28px}
+    .roles h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:1.2rem;margin-bottom:10px;color:var(--gold)}
+    .roles ul{list-style:none;font-size:.92rem;color:#54504a}
+    .roles li{padding:4px 0;border-top:1px solid var(--line)}
+    .roles li:first-of-type{border-top:none}
+
+    .demo{display:flex;justify-content:center;gap:56px;flex-wrap:wrap;margin-top:36px}
+    .phone{width:250px;background:#0a0908;border:3px solid var(--line);border-radius:32px;padding:10px 10px 16px;position:relative;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+    .phone::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:64px;height:6px;border-radius:4px;background:var(--line)}
+    .screen{background:#1a1712;border-radius:20px;padding:24px 14px 14px;min-height:340px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px}
+    .bubble{max-width:88%;padding:10px 14px;border-radius:14px;font-size:.86rem;line-height:1.4}
+    .bubble.in{align-self:flex-start;background:#2a2620;color:var(--paper);border-bottom-left-radius:3px}
+    .bubble.out{align-self:flex-end;background:var(--accent);color:var(--ink);font-weight:500;border-bottom-right-radius:3px}
+    .bubble img{width:100%;border-radius:10px;display:block;margin-top:4px}
+    .phone-tag{text-align:center;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--pencil);letter-spacing:.05em;text-transform:uppercase}
+
+    .qr-block{display:flex;align-items:center;gap:16px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .qr-block img{width:96px;height:96px;border-radius:6px}
+    .qr-block span{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--pencil);max-width:14ch;line-height:1.4}
+
+    footer{padding:40px 0 56px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer p{color:var(--pencil);font-size:.85rem}
+
+    @media (max-width:640px){
+      .flow{grid-template-columns:1fr}
+      .flow div{border-right:none;border-bottom:1px solid var(--line)}
+      .roles{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="logo"><img src="assets/logo.png" alt="GeArt"> Ge<em>Art</em></div>
+    <nav>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#descarga">Descargar</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <span class="stamp">Comisiones · Ilustración digital</span>
+    <h1>El taller donde tu <span class="stroke">encargo</span> toma forma.</h1>
+    <p class="lede">GeArt conecta clientes que necesitan una ilustración con artistas que la hacen realidad: pedido, chat, avances y entrega final, todo en un solo lugar.</p>
+
+    <div class="cta-row">
+      <a class="ticket" href="geart.apk" download>
+        Descargar APK
+        <small>v2.0 · Android 6.0+</small>
+      </a>
+      <span class="meta">geart.apk · instalación directa</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <section id="como-funciona">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>De la idea al dibujo terminado</h2>
+    <div class="flow">
+      <div><span>01 — Pedido</span><p>El cliente describe lo que quiere y propone un precio.</p></div>
+      <div><span>02 — Aceptación</span><p>Un artista toma el encargo, del mercado o por solicitud directa.</p></div>
+      <div><span>03 — Proceso</span><p>Chat en vivo con avances de la obra y ajustes de precio.</p></div>
+      <div><span>04 — Entrega</span><p>Se sube el producto final y el cliente califica al artista.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Para cada rol</span>
+    <h2>Una app, dos vistas</h2>
+    <div class="roles">
+      <div>
+        <h3>Cliente</h3>
+        <ul>
+          <li>Explora el directorio de artistas</li>
+          <li>Publica encargos con referencia e imagen</li>
+          <li>Sigue el progreso por chat</li>
+          <li>Califica al recibir la obra</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Artista</h3>
+        <ul>
+          <li>Filtra el mercado, directas y trabajos en curso</li>
+          <li>Propone precio y comparte avances</li>
+          <li>Entrega el producto final</li>
+          <li>Construye portafolio y reputación</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Ejemplo real</span>
+    <h2>Así se ve un encargo en GeArt</h2>
+    <div class="demo">
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="bubble in">Hola, ¿me harías una foca gamer con audífonos? 🦭🎧</div>
+            <div class="bubble out">Claro, te la entrego mañana. S/ 25</div>
+            <div class="bubble in">Trato hecho 🙌</div>
+          </div>
+        </div>
+        <p class="phone-tag">Cliente pidiendo</p>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="bubble in">Listo, aquí tienes tu foca 🦭</div>
+            <div class="bubble in"><img src="assets/example-foca.png" alt="Foca gamer"></div>
+            <div class="bubble out">¡Me encanta! Gracias ⭐⭐⭐⭐⭐</div>
+          </div>
+        </div>
+        <p class="phone-tag">Artista entregando</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="descarga">
+    <span class="eyebrow">Instalación</span>
+    <h2>Descarga e instala</h2>
+    <p class="lede" style="margin-bottom:28px">Descarga el APK, habilita "orígenes desconocidos" si tu dispositivo lo pide, e instala. No requiere Play Store.</p>
+    <div class="cta-row">
+      <a class="ticket" href="geart.apk" download>
+        Descargar APK
+        <small>v2.0 · Android 6.0+</small>
+      </a>
+      <div class="qr-block">
+        <img id="qr" alt="QR de descarga">
+        <span>Escanea desde tu celular para descargar</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>GeArt — Administrador de comisiones para artistas</p>
+    <p>Plataforma de Infraestructura EPIS · UCSM</p>
+  </footer>
+</div>
+
+<script>
+  const apkUrl = new URL('geart.apk', location.href).href;
+  document.getElementById('qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(apkUrl);
+</script>
+
+</body>
+</html>
